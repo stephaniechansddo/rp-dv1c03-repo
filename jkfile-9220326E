@@ -35,6 +35,10 @@ pipeline {
 		stage('ST2-9220326E') {
 			steps {
 			sh 'docker run -d -it -p 32900:80 --name svr-9220326E img-base-9220326e /bin/bash'
+			sh 'docker exec -it svr-9220326E /bin/bash'
+			sh 'service apache2 status'
+			sh 'service apache2 start'
+			sh 'exit'
         		sh """
         		echo "Stage 2"
         		"""
