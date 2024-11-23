@@ -1,4 +1,17 @@
 pipeline {
+	agent {
+		node {
+			label 'master'
+		}
+	}
+	
+	options {
+		buildDiscarder logRotator( 
+			daysToKeepStr: '15', 
+			numToKeepStr: '10'
+		)
+	}
+
 	stages {
 		stage('ST1-9220326E') {
 			steps {
