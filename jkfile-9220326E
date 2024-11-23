@@ -1,106 +1,87 @@
 pipeline {
-    agent any
 
-    tools {
-        maven 'maven3' // Specify your Maven version
-    }
+	agent {
+		node {
+			label 'main'
+		}
+	}
 
-    options {
-        buildDiscarder logRotator(
-            daysToKeepStr: '15',
-            numToKeepStr: '10'
-        )
-    }
+	tools { 
+		maven 'maven3' 
+	}
 
-    environment {
-        POLITE_ID = "9220326E"
-        IMAGE = "img-base-${env.POLITE_ID}"
-        CONTAINER_NAME = "svr-${env.POLITE_ID}"
-    }
+	options {
+		buildDiscarder logRotator( 
+			daysToKeepStr: '15', 
+			numToKeepStr: '10'
+		)
+	}
 
-    stages {
-        stage("ST1-${env.POLITE_ID}") {
-            steps {
-                cleanWs()
-                sh """
-                echo "ST1-${env.POLITE_ID}: Setup Release Environment Completed."
-                """
-            }
-        }
+	environment {
+		APP_NAME = "STUDENT_APP"
+		APP_ENV  = "DEV"
+	}
 
-        stage("ST2-${env.POLITE_ID}") {
-            steps {
-                script {
-                    // Ensure previous container is removed
-                    sh """
-                    docker ps -a | grep "${CONTAINER_NAME}" && docker rm -f ${CONTAINER_NAME} || echo "No previous container found"
-                    """
+	stages {
+        
+		stage('ST1-9220326E') {
+			steps {
+				sh """
+				echo "ST1-9220326E: Setup Release Environment Complete"
+				"""
+			}
+		}
 
-                    // Create and start the new container
-                    sh """
-                    docker run -d --name ${CONTAINER_NAME} -p 32900:80 ${IMAGE}
-                    echo "ST2-${env.POLITE_ID}: Server Setup Completed"
-                    """
-                }
-            }
-        }
+		stage('ST2-9220326E') {
+			steps {
+        		sh """
+        		echo "Stage 2"
+        		"""
+			}
+		}
+        
+		stage('ST3-Parellel-9220326E') {
+			parallel {
+				stage('ST3A-9220326E') {
+					steps {
+        				sh """
+        				echo "Stage 3 - a"
+        				"""
+					}
+				} 
+        	        
+				stage('ST3B-9220326E') {
+					steps {
+        				sh """
+        				echo "Stage 3 - b"
+        				"""
+					}
+				}
+			}   
+		}	
 
-        stage("ST3-Parellel-${env.POLITE_ID}") {
-            parallel {
-                stage("ST3A-${env.POLITE_ID}") {
-                    steps {
-                        sh """
-                        echo "ST3A-${env.POLITE_ID}: X-Site Scripting (XSS) Test Completed and Report Generated"
-                        """
-                    }
-                }
-                stage("ST3B-${env.POLITE_ID}") {
-                    steps {
-                        sh """
-                        echo "ST3B-${env.POLITE_ID}: SQL Injection (SQLI) Test Completed and Report Generated"
-                        """
-                    }
-                }
-            }
-        }
+		stage('ST4-9220326E') {
+			steps {
+				sh """
+				echo "Stage 4"
+				"""
+			}
+		}
+	
+		stage('ST5-9220326E') {
+			steps {
+				sh """
+				echo "Stage 5"
+				"""
+			}
+		}	
 
-        stage("ST4-${env.POLITE_ID}") {
-            steps {
-                sh """
-                echo "ST4-${env.POLITE_ID}: Security reports are checked"
-                """
-            }
-        }
-
-        stage("ST5-${env.POLITE_ID}") {
-            steps {
-                script {
-                    def proceed = input(message: "Hello ${env.POLITE_ID}, permission to proceed to next phase?",
-                                        ok: "Proceed",
-                                        parameters: [choice(choices: ['Proceed', 'Abort'], description: 'Choose your action', name: 'Action')])
-                    if (proceed == 'Abort') {
-                        error("Pipeline aborted by user.")
-                    } else {
-                        sh """
-                        echo "ST5-${env.POLITE_ID}: Approve to proceed to next phase"
-                        """
-                    }
-                }
-            }
-        }
-
-        stage("ST6-${env.POLITE_ID}") {
-            when {
-                expression {
-                    // Only execute if previous input was "Proceed"
-                    return true
-                }
-            }
-            steps {
-                sh """
-                echo "ST6-${env.POLITE_ID}: Ready for next phase"
-                """
-            }
-        }
-    }
+		stage('ST6-9220326E') {
+			steps {
+				sh """
+				echo "Stage 6"
+				"""
+			}
+		}
+    	}
 }
