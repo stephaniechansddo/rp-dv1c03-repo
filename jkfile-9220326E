@@ -23,7 +23,7 @@ pipeline {
 
 		stage('ST2-9220326E') {
 			steps {
-				sh 'docker run -d -it -p 32900:80 --name svr-9220326E img-base-9220326e /bin/bash -c "service apache2 start && tail -f /dev/null"'
+				sh 'docker rm -f svr-9220326E || true && docker run -d -it -p 32900:80 --name svr-9220326E img-base-9220326e /bin/bash -c "service apache2 start && tail -f /dev/null"'
 				sh """
 		            	echo "ST2-9220326E: Server Setup Completed"
 		            	"""
