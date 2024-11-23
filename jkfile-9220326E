@@ -1,26 +1,4 @@
 pipeline {
-	  agent {
-	    node {
-	      label 'master'
-	    }
-	  }
-	
-	  tools { 
-	    maven 'maven3' 
-	  }
-	
-	  options {
-	    buildDiscarder logRotator( 
-	      daysToKeepStr: '15', 
-	      numToKeepStr: '10'
-	    )
-	  }
-	
-	  environment {
-	    APP_NAME = "STUDENT_APP"
-	    APP_ENV  = "DEV"
-	  }
-
 	stages {
 		stage('ST1-9220326E') {
 			steps {
@@ -31,20 +9,12 @@ pipeline {
 		}
 
 		stage('ST2-9220326E') {
-		    	steps {
-		        	sh """
-		        	# Check if the container exists
-			        if docker ps -a --format '{{.Names}}' | grep -q '^svr-9220326E$'; then
-			            echo "Container svr-9220326E exists. Removing it..."
-			            docker rm -f svr-9220326E
-			        else
-			            echo "Container svr-9220326E does not exist. Proceeding to create one..."
-			        fi
-			        # Run the new container
-			        docker run -d -it -p 32900:80 --name svr-9220326E img-base-9220326e /bin/bash -c "service apache2 start && tail -f /dev/null"
-			        echo "ST2-9220326E: Container started successfully"
-			        """
-			}
+			steps {
+				sh 'docker run -d -it -p 32900:80 --name svr-9220326E img-base-9220326e /bin/bash -c "service apache2 start && tail -f /dev/null"'
+				sh """
+		            	echo "Stage 2"
+		            	"""
+		      	}
 		}
 
 		stage('ST3-Parellel-9220326E') {
