@@ -61,7 +61,7 @@ pipeline {
 		stage('ST5-9220326E') {
 			steps {
           			script {
-                    			def proceed = input(message: "Hello ${env.POLITE_ID}, permission to proceed to next phase?",
+                    			def proceed = input(message: "Hello 9220326E, permission to proceed to next phase?",
                                       		ok: "Proceed",
                                         	parameters: [choice(choices: ['Proceed', 'Abort'], description: 'Choose your action', name: 'Action')])
                     			if (proceed == 'Abort') {
