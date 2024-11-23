@@ -53,7 +53,7 @@ pipeline {
 				stage('ST3B-9220326E') {
 					steps {
         				sh """
-					docker run -d --name svr-9220326E -p 32900:80 img-base-9220326E
+					docker run -d --name svr-9220326E -p 32900:80 img-base-9220326e
         				echo "Stage 3 - b"
         				"""
 					}
